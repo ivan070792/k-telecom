@@ -12,7 +12,12 @@ use Illuminate\Support\Facades\Validator;
 class EquipmentController extends Controller
 {
     //
-    public function index(){
+    public function index(Request $request){
+
+        if ($request->get('q')){
+            return new EquipmentCollection(Equipment::where('serial_number','LIKE','%'.$request->get('q').'%')->get());
+        }
+
         return new EquipmentCollection(Equipment::paginate(50));
     }
 
@@ -23,10 +28,10 @@ class EquipmentController extends Controller
     public function destroy($id){
         $equipment = Equipment::findOrFail($id);
             $equipment->delete();
-            return [
+            return response([
                 'status' => 'success',
                 'message' => 'Deleted',
-            ];
+            ]);
     }
 
 
@@ -45,7 +50,7 @@ class EquipmentController extends Controller
             ]);
             if ($validator->fails()) {
                 $result['errors'][$key] = [
-                    'error' => 'validation error',
+                    'status' => 'error',
                     'message' => $validator->errors()->first()
                 ];
             }else{
@@ -53,7 +58,7 @@ class EquipmentController extends Controller
                 $result['success'][$key] = new EquipmentResource($newEquipment);
             }
         }
-        return ($result);
+        return response($result);
     }
 
     public function update($id, Request $request){
@@ -68,10 +73,12 @@ class EquipmentController extends Controller
             'serial_number' => ['bail' ,'string', 'size:10', new SerialNumber,],
             'desc' => 'string'
         ]);
+
         if ($validator->fails()) {
            return response([
+                'status' => 'error',
                 'message' => $validator->errors()->first()
-           ]);
+           ], 400);
         }else{
             $equipment->update($request->all());
             return new EquipmentResource($equipment);
