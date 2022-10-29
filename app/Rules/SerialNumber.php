@@ -22,7 +22,7 @@ class SerialNumber implements InvokableRule, DataAwareRule
         $original_sn_array = str_split($value);
         $tamplate_sn = EquipmentType::find($this->data['equipment_type_id'])->mask;
         $tamplate_sn_array = str_split($tamplate_sn);
-        
+
         foreach($original_sn_array as $key=>$char){
             // $tamplate_sn_array[$key]
             switch ($tamplate_sn_array[$key]) {

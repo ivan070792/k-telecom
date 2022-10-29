@@ -65,13 +65,13 @@ class EquipmentController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'equipment_type_id' => 'exists:equipment_types,id',
-            'serial_number' => ['string', new SerialNumber],
+            'serial_number' => ['bail' ,'string', 'size:10', new SerialNumber,],
             'desc' => 'string'
         ]);
         if ($validator->fails()) {
-           return [
+           return response([
                 'message' => $validator->errors()->first()
-           ];
+           ]);
         }else{
             $equipment->update($request->all());
             return new EquipmentResource($equipment);
