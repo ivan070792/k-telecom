@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use App\Http\Resources\ErrorResource;
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -49,23 +51,48 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (NotFoundHttpException $e, $request) {
+        // $this->renderable(function (NotFoundHttpException $e, $request) {
+        //     if ($request->is('api/*')) {
+
+        //         $error = (object) (
+        //             [
+        //                 'status' => 'Not found',
+        //                 'code' => 404,
+        //                 'message' => 'Record not found.'
+        //             ]
+        //         );
+        //         return  new ErrorResource($error);
+        //     }
+        // });
+
+        $this->renderable(function (ValidationException $e, $request) {
             if ($request->is('api/*')) {
 
                 $error = (object) (
                     [
-                        'status' => 'not found',
-                        'code' => 404,
-                        'message' => 'Record not found.'
+                        'status' => 'Bad Request',
+                        'code' => 400,
+                        'message' => $this->message
                     ]
                 );
                 return  new ErrorResource($error);
             }
         });
-        // $this->renderable(function (NotFoundHttpException $e, $request) {
-        //     if ($request->is('api/*')) {
 
-        //     }
-        // });
+        
+        $this->renderable(function (Exception $exception, $request) {
+            if ($request->is('api/*')) {
+                $error = (object) (
+                    [
+                        'status' => $this->status,
+                        'code' => $this->code,
+                        'message' => $this->message
+                    ]
+                );
+                return  new ErrorResource($error);
+            }
+        });
     }
+
+    
 }
