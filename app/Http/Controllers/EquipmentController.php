@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
+use App\Http\Resources\EquipmentStoreCollection;
+use App\Http\Resources\ErrorResource;
 use App\Models\Equipment;
 use App\Rules\SerialNumber;
 use Illuminate\Http\Request;
@@ -40,26 +42,33 @@ class EquipmentController extends Controller
 
         
         $data = $request->data;
-        $result = ['errors' => [], 'success' => []];
+        
+        $result = (object) [
+            'errors' => [],
+            'success' => []
+        ];
         
         foreach($data as $key=>$equipment){
             $validator = Validator::make($equipment, [
                 'equipment_type_id' => 'required|exists:equipment_types,id',
-                'serial_number' => ['required', 'string', 'unique:equipment,serial_number' , new SerialNumber],
+                'serial_number' => ['bail', 'required', 'string', 'size:10', 'unique:equipment,serial_number' , new SerialNumber],
                 'desc' => 'string'
             ]);
             if ($validator->fails()) {
-                dd($validator->errors());
-                $result['errors'][$key] = [
-                    'status' => 'error',
-                    'message' => $validator->errors()->first()
-                ];
+                $error = (object) (
+                    [
+                        'status' => 'Bad Request',
+                        'code' => 400,
+                        'message' => $validator->errors()->first()
+                    ]
+                );
+                $result->errors[$key] = new ErrorResource($error);
             }else{
                 $newEquipment = Equipment::create($equipment);
-                $result['success'][$key] = new EquipmentResource($newEquipment);
+                $result->success[$key] = new EquipmentResource($newEquipment);
             }
         }
-        return response($result);
+        return $result;
     }
 
     public function update($id, Request $request){
@@ -71,7 +80,7 @@ class EquipmentController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'equipment_type_id' => 'exists:equipment_types,id',
-            'serial_number' => ['bail' ,'string', 'size:10', new SerialNumber,],
+            'serial_number' => ['bail', 'required' ,'string', 'size:10', new SerialNumber,],
             'desc' => 'string'
         ]);
 
