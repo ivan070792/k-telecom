@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class EquipmentController extends Controller
 {
-    //
+    /**
+     * Display a listing equipment.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return EquipmentCollection
+     */
     public function index(Request $request){
 
         if ($request->get('q')){
@@ -23,6 +28,12 @@ class EquipmentController extends Controller
         return new EquipmentCollection(Equipment::paginate(50));
     }
 
+    /**
+     * Display the specified equipment.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id){
         return new EquipmentResource(Equipment::findOrFail($id));
     }
@@ -37,7 +48,12 @@ class EquipmentController extends Controller
     }
 
 
-
+    /**
+     * Store equipment.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array \Illuminate\Http\Response
+     */
     public function store(Request $request){
 
         
@@ -74,6 +90,13 @@ class EquipmentController extends Controller
         return response((array)$result, 200);
     }
 
+    /**
+     * Update equipment.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return array \Illuminate\Http\Response or EquipmentResource
+     */
     public function update($id, Request $request){
 
         $equipment = Equipment::findOrFail($id);
