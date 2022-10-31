@@ -19,36 +19,35 @@ class SerialNumber implements InvokableRule, DataAwareRule
      */
     public function __invoke($attribute, $value, $fail)
     {
-        $original_sn_array = str_split($value);
-        $tamplate_sn = EquipmentType::find($this->data['equipment_type_id'])->mask;
+        $tamplate_sn = EquipmentType::findOrFail($this->data['equipment_type_id'])->mask;
         $tamplate_sn_array = str_split($tamplate_sn);
 
-        foreach($original_sn_array as $key=>$char){
-            // $tamplate_sn_array[$key]
-            switch ($tamplate_sn_array[$key]) {
+        $sn_reg_ex = '/^';
+        
+        foreach($tamplate_sn_array as $char){
+            switch ($char) {
                 case 'N':
-                    $pattern = '/^[0-9]+$/i';
+                    $sn_reg_ex .= '[0-9]';
                     break;
                 case 'A':
-                    $pattern = '/^[A-Z]+$/i';
+                    $sn_reg_ex .= '[A-Z]';
                     break;
                 case 'a':
-                    $pattern = '/^[a-z]+$/i';
+                    $sn_reg_ex .= '[a-z]';
                     break;
                 case 'X':
-                    $pattern = '/^[A-Z9-0]+$/i';
+                    $sn_reg_ex .= '[A-Z0-9]';
                     break;
                 case 'Z':
-                    $pattern = '/^[-_@]+$/i';
+                    $sn_reg_ex .= '[-_@]';
                     break;
-            }
-                // var_dump($tamplate_sn_array[$key]);
-            if (preg_match($pattern,$char)){
-                // var_dump(1);
-            }else{
-                $fail('The :attribute mask does not fit. Mask:'.$tamplate_sn);
-            }
-
+            }    
+        }
+        $sn_reg_ex .= '$/s';
+        if (preg_match($sn_reg_ex, $value)){
+                return true;
+        }else{
+            $fail('The :attribute mask does not fit. Mask:'.$tamplate_sn);
         }
 
     }
