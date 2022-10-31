@@ -111,14 +111,14 @@ class EquipmentController extends Controller
         ]);
 
         if ($validator->fails()) {
-           return response([
-                'status' => 'error',
-                'message' => $validator->errors()->first()
-           ], 400);
-        }else{
-            $equipment->update($request->all());
-            return new EquipmentResource($equipment);
-        }
-
+            return new ErrorResource([
+                 'status' => 'Bad Request',
+                 'code' => 400,
+                 'message' => $validator->errors()->first()
+            ]);
+         }else{
+             $equipment->update($request->all());
+             return new EquipmentResource($equipment);
+         } 
     }
 }
