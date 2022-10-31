@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class EquipmentStoreCollection extends ResourceCollection
+class ErrorCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -14,10 +14,8 @@ class EquipmentStoreCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-
         return [
-            'errors' => '',
-            'success' => new EquipmentCollection($this->success)
+            'data' => $this->collection,
         ];
     }
 }

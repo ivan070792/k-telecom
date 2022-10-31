@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
 use App\Http\Resources\EquipmentStoreCollection;
+use App\Http\Resources\ErrorCollection;
 use App\Http\Resources\ErrorResource;
 use App\Models\Equipment;
 use App\Rules\SerialNumber;
@@ -42,7 +43,8 @@ class EquipmentController extends Controller
 
         
         $data = $request->data;
-        
+        $errors = [];
+        $success = [];
         $result = (object) [
             'errors' => [],
             'success' => []
@@ -62,13 +64,15 @@ class EquipmentController extends Controller
                         'message' => $validator->errors()->first()
                     ]
                 );
-                $result->errors[$key] = new ErrorResource($error);
+                $errors[$key] = new ErrorResource($error);
             }else{
                 $newEquipment = Equipment::create($equipment);
-                $result->success[$key] = new EquipmentResource($newEquipment);
+                $success[$key] = new EquipmentResource($newEquipment);
             }
         }
-        return $result;
+        $result->errors = new ErrorCollection($errors);
+        $result->success = new EquipmentCollection($success);
+        return response((array)$result, 200);
     }
 
     public function update($id, Request $request){

@@ -51,28 +51,14 @@ class Handler extends ExceptionHandler
             //
         });
 
-        // $this->renderable(function (NotFoundHttpException $e, $request) {
-        //     if ($request->is('api/*')) {
-
-        //         $error = (object) (
-        //             [
-        //                 'status' => 'Not found',
-        //                 'code' => 404,
-        //                 'message' => 'Record not found.'
-        //             ]
-        //         );
-        //         return  new ErrorResource($error);
-        //     }
-        // });
-
-        $this->renderable(function (ValidationException $e, $request) {
+        $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
 
                 $error = (object) (
                     [
-                        'status' => 'Bad Request',
-                        'code' => 400,
-                        'message' => $this->message
+                        'status' => 'Not found',
+                        'code' => 404,
+                        'message' => 'Record not found.'
                     ]
                 );
                 return  new ErrorResource($error);
@@ -80,18 +66,18 @@ class Handler extends ExceptionHandler
         });
 
         
-        $this->renderable(function (Exception $exception, $request) {
-            if ($request->is('api/*')) {
-                $error = (object) (
-                    [
-                        'status' => $this->status,
-                        'code' => $this->code,
-                        'message' => $this->message
-                    ]
-                );
-                return  new ErrorResource($error);
-            }
-        });
+        // $this->renderable(function (Exception $exception, $request) {
+        //     if ($request->is('api/*')) {
+        //         $error = (object) (
+        //             [
+        //                 'status' => $this->status,
+        //                 'code' => $this->code,
+        //                 'message' => $this->message
+        //             ]
+        //         );
+        //         return  new ErrorResource($error);
+        //     }
+        // });
     }
 
     
