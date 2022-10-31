@@ -49,6 +49,7 @@ class EquipmentController extends Controller
                 'desc' => 'string'
             ]);
             if ($validator->fails()) {
+                dd($validator->errors());
                 $result['errors'][$key] = [
                     'status' => 'error',
                     'message' => $validator->errors()->first()

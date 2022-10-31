@@ -38,7 +38,7 @@ class SerialNumber implements InvokableRule, DataAwareRule
                 case 'X':
                     $pattern = '/^[A-Z9-0]+$/i';
                     break;
-                case 'X':
+                case 'Z':
                     $pattern = '/^[-_@]+$/i';
                     break;
             }
