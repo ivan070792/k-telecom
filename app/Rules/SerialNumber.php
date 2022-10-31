@@ -61,7 +61,6 @@ class SerialNumber implements InvokableRule, DataAwareRule
     public function setData($data)
     {
         $this->data = $data; // Возможно не нужно педедавать все данные, а только equipment_type_id
- 
         return $this;
     }
 }

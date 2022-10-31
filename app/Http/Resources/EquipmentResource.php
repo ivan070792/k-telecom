@@ -14,7 +14,6 @@ class EquipmentResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
             "id" => $this->id,
             "equipment_type" => new EquipmentTypeResource($this->equipment_type),

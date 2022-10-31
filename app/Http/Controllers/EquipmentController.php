@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
-use App\Http\Resources\EquipmentStoreCollection;
 use App\Http\Resources\ErrorCollection;
 use App\Http\Resources\ErrorResource;
 use App\Models\Equipment;

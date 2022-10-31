@@ -19,6 +19,5 @@ class ErrorResource extends JsonResource
             'code' => $this->code,
             'message' => $this->message
         ];
-        // return parent::toArray($request);
     }
 }
