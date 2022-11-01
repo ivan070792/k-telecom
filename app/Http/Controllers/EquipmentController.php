@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\EquipmentCollection;
 use App\Http\Resources\EquipmentResource;
+use App\Http\Resources\EquipmentStoreResource;
 use App\Http\Resources\ErrorCollection;
 use App\Http\Resources\ErrorResource;
 use App\Models\Equipment;
@@ -87,6 +88,7 @@ class EquipmentController extends Controller
         }
         $result->errors = new ErrorCollection($errors);
         $result->success = new EquipmentCollection($success);
+        return new EquipmentStoreResource($result);
         return response((array)$result, 200);
     }
 
