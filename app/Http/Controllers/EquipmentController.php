@@ -89,7 +89,6 @@ class EquipmentController extends Controller
         $result->errors = new ErrorCollection($errors);
         $result->success = new EquipmentCollection($success);
         return new EquipmentStoreResource($result);
-        return response((array)$result, 200);
     }
 
     /**
